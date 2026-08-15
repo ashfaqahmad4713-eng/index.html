@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GameMaster 3D</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#070319;color:#fff;font-family:Arial,sans-serif}
+button{cursor:pointer;font:inherit}
+header{height:75px;background:#09051b;border-bottom:1px solid #38247d;display:flex;align-items:center;padding:0 22px;gap:20px;position:sticky;top:0;z-index:10}
+.logo{font-size:29px;font-weight:900;font-style:italic}.logo span{color:#29baff}
+.balance{margin-left:auto;border:1px solid #38247d;border-radius:14px;padding:7px 12px;display:flex;align-items:center;gap:8px}
+.balance small{display:block;color:#aaa}.balance b{font-size:18px}
+.plus{background:#25c94b;color:white;border:0;border-radius:50%;width:38px;height:38px;font-size:25px}
+nav button{background:none;border:0;color:white;margin:0 5px}
+.wrap{max-width:1250px;margin:auto;padding:15px 24px 80px}
+.hero{display:grid;grid-template-columns:2.5fr 1fr;gap:12px}
+.hero1,.daily{border:1px solid #432b96;border-radius:17px;background:#120a35}
+.hero1{height:235px;padding:24px;position:relative;overflow:hidden;background:radial-gradient(circle at 75%,#6817d5,#210d57 48%,#100526)}
+.hero1:after{content:"👩🏻  👩🏻‍🦰  🎁";position:absolute;right:18px;bottom:5px;font-size:57px}
+.hero1 h1{font-size:40px;margin:0}.hero1 h2{font-size:29px;color:#ffd21c;margin:5px 0}
+.hero1 p{font-size:17px;line-height:1.5;max-width:500px}
+.daily{padding:22px}.daily p{color:#ddd;line-height:1.5}
+.btn{border:0;border-radius:9px;padding:11px 21px;font-weight:bold;margin:4px}
+.purple{background:#7022ff;color:white}.gold{background:#ffd21c;color:#111}.green{background:#20c94c;color:white}
+.quick{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin:13px 0}
+.quick button{background:#15103b;border:1px solid #3b2985;color:white;border-radius:13px;padding:12px}
+.quick span{display:block;font-size:30px;margin-bottom:5px}
+.section{border:1px solid #39278b;border-radius:17px;background:#100b30;padding:14px;margin:13px 0}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.head h2{margin:0}
+.view{border:0;background:#291565;color:#fff;border-radius:18px;padding:8px 16px}
+.people,.games,.rewards{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.person,.game,.reward{background:#15103b;border:1px solid #49319b;border-radius:12px;overflow:hidden}
+.face{height:135px;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(145deg,#79502d,#24132d)}
+.pt{padding:8px;font-size:14px}.online{color:#30df68;font-size:10px}
+.game{color:#fff;padding:0 0 9px;position:relative}
+.game:hover{border-color:#a47cff}
+.gicon{height:105px;display:flex;align-items:center;justify-content:center;font-size:55px;background:radial-gradient(circle,#42229a,#120c34)}
+.gname{font-weight:bold;padding:8px 3px 2px}
+.tag{position:absolute;right:5px;top:5px;background:#ed3942;border-radius:6px;padding:3px 6px;font-size:9px}
+.ricon{height:90px;display:flex;align-items:center;justify-content:center;font-size:52px}.reward{text-align:center;padding:8px}.reward p{color:#ffd21c}
+.promos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.promo{border:1px solid #402c91;border-radius:17px;background:#120d35;padding:20px}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:50;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}.box{width:min(600px,100%);background:#100b32;border:1px solid #5a3bbd;border-radius:18px;padding:22px;max-height:90vh;overflow:auto}
+.close{float:right;background:none;border:0;color:white;font-size:28px}.input{width:100%;padding:12px;margin:6px 0;background:#080622;color:white;border:1px solid #42308d;border-radius:8px}
+.stage{min-height:300px;border:1px solid #5139a8;border-radius:15px;background:radial-gradient(circle,#301678,#08051c);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+.big{font-size:85px}.result{color:#ffd21c;font-size:20px;font-weight:bold;margin:10px}
+.bottom{display:none}
+
+@media(max-width:950px){
+.hero{grid-template-columns:1fr}.games{grid-template-columns:repeat(4,1fr)}
+.people,.rewards{grid-template-columns:repeat(3,1fr)}.quick{grid-template-columns:repeat(3,1fr)}
+.promos{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+header{height:62px;padding:0 8px}.logo{font-size:20px}header nav{display:none}
+.balance{min-width:145px;padding:5px 8px}.balance b{font-size:14px}
+.wrap{padding:9px 8px 75px}.hero1{height:245px;padding:18px 14px}
+.hero1 h1{font-size:30px}.hero1 h2{font-size:23px}.hero1:after{font-size:42px}
+.quick{grid-template-columns:repeat(2,1fr)}.games{grid-template-columns:repeat(2,1fr)}
+.people,.rewards{grid-template-columns:repeat(2,1fr)}.face{height:115px}
+.gicon{height:100px}
+.bottom{display:grid;position:fixed;bottom:0;left:0;right:0;height:62px;background:#0b0825;border-top:1px solid #342675;grid-template-columns:repeat(5,1fr);z-index:40}
+.bottom button{background:none;border:0;color:#fff;font-size:10px}.bottom span{display:block;font-size:21px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">♛ GameMaster<span>3D</span></div>
+
+<div class="balance">
+🪙
+<div><small>Balance</small><b id="balance">50,000</b></div>
+<button class="plus" onclick="wallet()">+</button>
+</div>
+
+<nav>
+<button onclick="rewards()">🎁<br>Rewards</button>
+<button onclick="messages()">💬<br>Messages</button>
+<button onclick="support()">🎧<br>Support</button>
+</nav>
+</header>
+
+<main class="wrap">
+
+<section class="hero">
+<div class="hero1">
+<h1>Play & Win</h1>
+<h2>Amazing Rewards</h2>
+<p>Play your favorite games and win exciting virtual rewards.</p>
+<button class="btn purple" onclick="login()">Login</button>
+<button class="btn gold" onclick="register()">Create Account</button>
+</div>
+
+<div class="daily">
+<h2>🎁 Daily Bonus</h2>
+<p>Claim your daily virtual coin bonus now.</p>
+<button class="btn gold" onclick="bonus()">Claim Now</button>
+</div>
+</section>
+
+<section class="quick">
+<button onclick="game(11)"><span>🎡</span>Spin Wheel</button>
+<button onclick="bonus()"><span>📅</span>Daily Bonus</button>
+<button onclick="game(3)"><span>🃏</span>Lucky Card</button>
+<button onclick="game(33)"><span>🎨</span>Scratch & Win</button>
+<button onclick="invite()"><span>👥</span>Invite & Earn</button>
+<button onclick="rewards()"><span>👑</span>VIP Club</button>
+</section>
+
+<section class="section">
+<div class="head"><h2>Top Girls</h2><button class="view">View All</button></div>
+<div class="people">
+
+<div class="person"><div class="face">👩🏻</div><div class="pt">🟢 Ayesha<br>🪙 12,540</div></div>
+<div class="person"><div class="face">👩🏼</div><div class="pt">🟢 Zoya<br>🪙 9,860</div></div>
+<div class="person"><div class="face">👩🏻‍🦰</div><div class="pt">🟢 Hania<br>🪙 15,230</div></div>
+<div class="person"><div class="face">👩🏽</div><div class="pt">🟢 Laiba<br>🪙 8,750</div></div>
+<div class="person"><div class="face">👩🏼‍🦱</div><div class="pt">🟢 Sana<br>🪙 11,360</div></div>
+<div class="person"><div class="face">👩🏻‍🦰</div><div class="pt">🟢 Maya<br>🪙 10,480</div></div>
+
+</div>
+</section>
+
+<section class="section" id="games">
+<div class="head">
+<h2>Popular Games <small style="color:#999">50 Games</small></h2>
+<button class="view">View All</button>
+</div>
+<div class="games" id="gameGrid"></div>
+</section>
+
+<section class="section">
+<div class="head"><h2>Rewards</h2><button class="view" onclick="rewards()">View All</button></div>
+
+<div class="rewards">
+<div class="reward"><div class="ricon">📱</div><b>iPhone 15</b><p>🪙 1,250,000</p></div>
+<div class="reward"><div class="ricon">📱</div><b>Samsung S24</b><p>🪙 1,150,000</p></div>
+<div class="reward"><div class="ricon">💻</div><b>MacBook Air</b><p>🪙 1,800,000</p></div>
+<div class="reward"><div class="ricon">🎧</div><b>AirPods Pro</b><p>🪙 450,000</p></div>
+<div class="reward"><div class="ricon">⌚</div><b>Smart Watch</b><p>🪙 350,000</p></div>
+<div class="reward"><div class="ricon">🪙</div><b>Gold Coin</b><p>🪙 120,000</p></div>
+</div>
+</section>
+
+<section class="promos">
+<div class="promo">
+<h2>🎁 Refer & Earn</h2>
+<p>Invite friends and earn virtual coins.</p>
+<button class="btn purple" onclick="invite()">Invite Now</button>
+</div>
+
+<div class="promo">
+<h2>💳 Wallet</h2>
+<p>Virtual coin balance and game wallet.</p>
+<button class="btn gold" onclick="wallet()">Open Wallet</button>
+</div>
+
+<div class="promo" style="background:#063b25">
+<h2>🎧 Customer Support</h2>
+<p>Need help? Contact support.</p>
+<button class="btn green" onclick="support()">Chat Now</button>
+</div>
+</section>
+
+</main>
+
+<nav class="bottom">
+<button onclick="scrollTo(0,0)"><span>⌂</span>Home</button>
+<button onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})"><span>🎮</span>Games</button>
+<button onclick="rewards()"><span>🎁</span>Rewards</button>
+<button onclick="wallet()"><span>💳</span>Wallet</button>
+<button onclick="login()"><span>👤</span>Profile</button>
+</nav>
+
+<div class="modal" id="modal">
+<div class="box" id="box"></div>
+</div>
+
+<script>
+
+const games=[
+["Aviator","✈️"],["Dragon Tiger","🐉"],["Roulette","🎡"],["Andar Bahar","🃏"],["Mines","💣"],
+["Jackpot Slots","🎰"],["Crash","🚀"],["Teen Patti","🃏"],["Ludo","🎲"],["Dice","🎲"],
+["Plinko","🔴"],["Lucky Wheel","🎡"],["Blackjack","🂡"],["Baccarat","🃏"],["Keno","🔢"],
+["Color Wheel","🌈"],["Fruit Slots","🍒"],["Golden 7","7️⃣"],["Diamond Slots","💎"],["Fancy 777","🎰"],
+["Poker","♠️"],["Speed Cards","🃏"],["High Low","⬆️"],["Coin Flip","🪙"],["Lucky Dice","🎲"],
+["Magic Ball","🔮"],["Number Rush","🔢"],["Treasure Hunt","💰"],["Rocket Run","🚀"],["Star Spin","⭐"],
+["Candy Blast","🍬"],["Bubble Pop","🫧"],["Memory Match","🧠"],["Scratch Win","🎨"],["Lucky Box","🎁"],
+["Gold Miner","⛏️"],["Gem Hunt","💎"],["Treasure Chest","🧰"],["Fire Wheel","🔥"],["Ocean Spin","🌊"],
+["Dragon Spin","🐲"],["Royal Cards","👑"],["Magic Slots","✨"],["Space Dice","🌌"],["Jungle Win","🌴"],
+["Candy Wheel","🍭"],["Football Kick","⚽"],["Basketball Shot","🏀"],["Car Race","🏎️"],["Target Hit","🎯"]
+];
+
+const grid=document.getElementById("gameGrid");
+
+games.forEach((g,i)=>{
+grid.innerHTML+=`
+<button class="game" onclick="game(${i})">
+<div class="gicon">${g[1]}</div>
+<div class="gname">${g[0]}</div>
+<div class="tag">${i<6?"HOT":i%5===0?"NEW":"PLAY"}</div>
+</button>`;
+});
+
+let balance=Number(localStorage.getItem("gm_balance")||50000);
+let account=JSON.parse(localStorage.getItem("gm_account")||"null");
+
+function save(){
+localStorage.setItem("gm_balance",balance);
+document.getElementById("balance").textContent=balance.toLocaleString();
+}
+
+const modal=document.getElementById("modal");
+const box=document.getElementById("box");
+
+function show(html){
+box.innerHTML=html;
+modal.classList.add("show");
+}
+
+function closeBox(){
+modal.classList.remove("show");
+}
+
+modal.onclick=e=>{
+if(e.target===modal)closeBox();
+};
+
+function register(){
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>✨ Create Account</h2>
+<input id="name" class="input" placeholder="Full Name">
+<input id="phone" class="input" placeholder="Mobile Number">
+<input id="pass" class="input" type="password" placeholder="Password">
+<button class="btn gold" style="width:100%" onclick="createAccount()">Create Account</button>
+`);
+}
+
+function createAccount(){
+let n=document.getElementById("name").value;
+let p=document.getElementById("phone").value;
+let pw=document.getElementById("pass").value;
+
+if(!n||!p||!pw){
+alert("Please fill all fields");
+return;
+}
+
+account={name:n,phone:p,password:pw};
+localStorage.setItem("gm_account",JSON.stringify(account));
+
+alert("Account created successfully!");
+closeBox();
+}
+
+function login(){
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>🔐 Login</h2>
+<input id="lphone" class="input" placeholder="Mobile Number">
+<input id="lpass" class="input" type="password" placeholder="Password">
+<button class="btn purple" style="width:100%" onclick="doLogin()">Login</button>
+`);
+}
+
+function doLogin(){
+
+if(!account){
+alert("Please create an account first.");
+return;
+}
+
+let p=document.getElementById("lphone").value;
+let pw=document.getElementById("lpass").value;
+
+if(p===account.phone && pw===account.password){
+alert("Welcome "+account.name+"!");
+closeBox();
+}else{
+alert("Incorrect mobile number or password.");
+}
+}
+
+function bonus(){
+
+let today=new Date().toDateString();
+
+if(localStorage.getItem("gm_bonus")===today){
+alert("Today's bonus already claimed.");
+return;
+}
+
+balance+=5000;
+localStorage.setItem("gm_bonus",today);
+save();
+
+alert("🎉 5,000 virtual coins added!");
+}
+
+function game(i){
+
+let g=games[i];
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>🎮 ${g[0]}</h2>
+
+<div class="stage">
+<div class="big">${g[1]}</div>
+<div class="result" id="result">Ready to play</div>
+<button class="btn purple" onclick="playGame(${i})">PLAY NOW</button>
+</div>
+
+<p style="color:#999">Virtual coins only.</p>
+`);
+}
+
+function playGame(i){
+
+if(balance<1000){
+document.getElementById("result").textContent="Not enough virtual coins.";
+return;
+}
+
+balance-=1000;
+
+if(Math.random()<0.45){
+
+let prize=2000+Math.floor(Math.random()*4001);
+
+balance+=prize;
+
+document.getElementById("result").textContent=
+"🎉 YOU WIN +"+prize.toLocaleString()+" coins";
+
+}else{
+
+document.getElementById("result").textContent=
+"Try again — 1,000 coins used.";
+
+}
+
+save();
+}
+
+function wallet(){
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>💳 Wallet</h2>
+
+<h3>Current Balance: 🪙 ${balance.toLocaleString()}</h3>
+
+<hr>
+
+<p>Wallet uses virtual game coins.</p>
+
+<button class="btn purple" onclick="addCoins()">+10,000 Coins</button>
+
+<button class="btn gold" onclick="removeCoins()">−5,000 Coins</button>
+
+<p style="color:#999;font-size:13px">
+Real-money deposits and withdrawals are not connected.
+</p>
+`);
+}
+
+function addCoins(){
+balance+=10000;
+save();
+closeBox();
+}
+
+function removeCoins(){
+
+if(balance<5000){
+alert("Not enough coins.");
+return;
+}
+
+balance-=5000;
+save();
+closeBox();
+}
+
+function rewards(){
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>👑 Rewards Plans</h2>
+
+<p>🥉 Bronze — 5,000 coins</p>
+<p>🥈 Silver — 25,000 coins</p>
+<p>🥇 Gold — 75,000 coins</p>
+<p>💎 Platinum — 100,000 coins</p>
+<p>👑 VIP — 150,000 coins</p>
+`);
+}
+
+function invite(){
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>🎁 Invite & Earn</h2>
+<p>Your referral code:</p>
+<div style="background:#ffd21c;color:#111;text-align:center;padding:12px;border-radius:8px;font-weight:bold">
+GM${Math.floor(100000+Math.random()*900000)}
+</div>
+`);
+}
+
+function messages(){
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>💬 Messages</h2>
+<p>🎉 Welcome to GameMaster 3D.</p>
+<p>🎁 Your daily bonus is available.</p>
+`);
+}
+
+function support(){
+
+show(`
+<button class="close" onclick="closeBox()">×</button>
+<h2>🎧 Customer Support</h2>
+<p>Need help with your account?</p>
+<p>Contact support from this page.</p>
+`);
+}
+
+save();
+
+</script>
+
+</body>
+</html>
