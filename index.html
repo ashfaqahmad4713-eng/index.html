@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GameMaster 3D</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#070318;
+ color:#fff;
+ font-family:Arial,Helvetica,sans-serif;
+}
+button{font-family:inherit;cursor:pointer}
+header{
+ height:76px;
+ display:flex;
+ align-items:center;
+ padding:10px 24px;
+ gap:18px;
+ background:#09051b;
+ border-bottom:1px solid #302064;
+ position:sticky;
+ top:0;
+ z-index:20;
+}
+.logo{
+ font-size:30px;
+ font-weight:900;
+ font-style:italic;
+ white-space:nowrap
+}
+.logo .blue{color:#22bfff}
+.logo .three{color:#6c39ff}
+
+.topbalance{
+ margin-left:auto;
+ min-width:190px;
+ padding:7px 10px;
+ border:1px solid #372276;
+ border-radius:15px;
+ display:flex;
+ align-items:center;
+ gap:10px
+}
+.coin{font-size:27px}
+.topbalance small{color:#aaa;display:block}
+.topbalance strong{font-size:19px}
+.plus{
+ width:39px;height:39px;border-radius:50%;
+ border:0;background:#23c94c;color:#fff;
+ font-size:27px;margin-left:auto
+}
+.topnav{display:flex;gap:10px}
+.topnav button{
+ background:none;border:0;color:#fff;font-size:13px
+}
+.wrap{max-width:1250px;margin:auto;padding:16px 24px 100px}
+
+.hero{
+ display:grid;
+ grid-template-columns:2.55fr 1fr;
+ gap:12px
+}
+.heroMain{
+ min-height:235px;
+ border:1px solid #402a94;
+ border-radius:17px;
+ padding:25px;
+ position:relative;
+ overflow:hidden;
+ background:
+ radial-gradient(circle at 75% 50%,#751ee6 0,#351078 35%,#100526 72%)
+}
+.heroMain h1{font-size:40px;margin:0 0 4px}
+.heroMain h2{color:#ffd51a;font-size:30px;margin:0 0 10px}
+.heroMain p{font-size:17px;line-height:1.5;max-width:520px}
+.heroArt{
+ position:absolute;
+ right:15px;
+ bottom:4px;
+ font-size:70px;
+ letter-spacing:-12px;
+ opacity:.95
+}
+.daily{
+ border:1px solid #402a94;
+ border-radius:17px;
+ background:#110a31;
+ padding:20px
+}
+.daily h2{margin-top:0}
+.daily p{line-height:1.6;color:#ddd}
+
+.btn{
+ border:0;
+ border-radius:9px;
+ padding:12px 22px;
+ font-weight:bold;
+ margin:4px
+}
+.purple{background:#6922ff;color:#fff}
+.yellow{background:#ffd21b;color:#111}
+.green{background:#22c94c;color:#fff}
+.red{background:#e9384c;color:#fff}
+
+.quick{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:9px;
+ margin:14px 0
+}
+.quick button{
+ background:#151039;
+ color:#fff;
+ border:1px solid #392681;
+ border-radius:13px;
+ padding:12px 5px
+}
+.quick .ico{
+ font-size:31px;
+ display:block;
+ margin-bottom:7px
+}
+
+.section{
+ background:#100a30;
+ border:1px solid #3b2889;
+ border-radius:17px;
+ padding:14px;
+ margin:13px 0
+}
+.sectionHead{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:12px
+}
+.sectionHead h2{margin:0}
+.view{
+ background:#28145e;
+ border:0;
+ color:#fff;
+ padding:9px 16px;
+ border-radius:18px
+}
+
+.people{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:9px
+}
+.person{
+ background:#17113d;
+ border:1px solid #49329a;
+ border-radius:12px;
+ overflow:hidden
+}
+.face{
+ height:140px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:76px;
+ background:linear-gradient(140deg,#6d492a,#25132d)
+}
+.personText{padding:8px;font-size:14px}
+.online{color:#2dde68;font-size:10px}
+
+.games{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:9px
+}
+.gameCard{
+ position:relative;
+ border:1px solid #4b339c;
+ border-radius:12px;
+ background:#15103a;
+ overflow:hidden;
+ color:#fff;
+ padding:0 0 10px
+}
+.gameCard:hover{
+ border-color:#a36fff;
+ transform:translateY(-2px)
+}
+.gameIcon{
+ height:105px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:57px;
+ background:radial-gradient(circle,#48269c,#110b32)
+}
+.gameName{font-weight:bold;padding:8px 5px 0}
+.gameTag{
+ position:absolute;
+ right:5px;
+ top:5px;
+ padding:4px 7px;
+ border-radius:6px;
+ background:#e93642;
+ font-size:9px
+}
+
+.rewards{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:9px
+}
+.reward{
+ text-align:center;
+ background:#15103a;
+ border:1px solid #49319b;
+ border-radius:12px;
+ padding:8px
+}
+.rewardIcon{
+ height:95px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:55px
+}
+.reward p{color:#ffd21b}
+
+.bottom{
+ display:none
+}
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:100;
+ background:#000d;
+ align-items:center;
+ justify-content:center;
+ padding:12px
+}
+.modal.open{display:flex}
+.modalBox{
+ width:min(700px,100%);
+ max-height:92vh;
+ overflow:auto;
+ border:1px solid #6744c2;
+ border-radius:18px;
+ background:#0d0829;
+ padding:20px
+}
+.close{
+ float:right;
+ background:none;
+ border:0;
+ color:#fff;
+ font-size:28px
+}
+.input{
+ width:100%;
+ padding:13px;
+ margin:6px 0;
+ background:#07051c;
+ color:#fff;
+ border:1px solid #483399;
+ border-radius:8px
+}
+
+/* AVIATOR */
+.aviator{
+ background:#111214;
+ border-radius:16px;
+ padding:10px;
+}
+.aviTop{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:8px
+}
+.aviLogo{
+ color:#f52559;
+ font-size:30px;
+ font-weight:bold;
+ font-style:italic
+}
+.multHistory{
+ display:flex;
+ gap:8px;
+ overflow:hidden;
+ padding:8px
+}
+.multHistory span{
+ color:#48b9ff;
+ background:#181a1d;
+ padding:6px 9px;
+ border-radius:12px
+}
+.flyArea{
+ height:280px;
+ border:1px solid #444;
+ border-radius:16px;
+ background:
+ radial-gradient(circle at 55% 40%,#073e5d,#071017 35%,#030507 75%);
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+ overflow:hidden
+}
+.multiplier{
+ font-size:65px;
+ font-weight:bold;
+ z-index:2
+}
+.plane{
+ font-size:70px;
+ position:absolute;
+ bottom:35px;
+ left:10%;
+ transition:.1s linear
+}
+.betPanel{
+ margin-top:10px;
+ background:#1b1c1f;
+ border-radius:15px;
+ padding:14px
+}
+.betRow{
+ display:flex;
+ gap:10px;
+ align-items:center
+}
+.betAmount{
+ flex:1;
+ text-align:center;
+ font-size:25px;
+ font-weight:bold
+}
+.amountBtn{
+ border:0;
+ border-radius:50%;
+ width:42px;
+ height:42px;
+ background:#292a2e;
+ color:#fff;
+ font-size:24px
+}
+.betButton{
+ width:100%;
+ padding:18px;
+ border:2px solid #6ee848;
+ border-radius:15px;
+ background:#18ad05;
+ color:#fff;
+ font-size:25px;
+ margin-top:10px
+}
+.cashButton{
+ background:#f0a500;
+ border-color:#ffd04a
+}
+.history{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap;
+ margin-top:10px
+}
+.history span{
+ padding:6px 9px;
+ border-radius:10px;
+ background:#202125
+}
+
+/* game stage */
+.stage{
+ min-height:330px;
+ border:1px solid #4b359d;
+ border-radius:16px;
+ background:radial-gradient(circle,#351679,#08051d);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ text-align:center;
+ padding:20px
+}
+.stageIcon{font-size:90px}
+.stageTitle{font-size:28px;margin:10px}
+.result{
+ min-height:28px;
+ color:#ffd21b;
+ font-weight:bold
+}
+
+@media(max-width:950px){
+ .hero{grid-template-columns:1fr}
+ .games{grid-template-columns:repeat(4,1fr)}
+ .people,.rewards{grid-template-columns:repeat(3,1fr)}
+ .quick{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:600px){
+ header{height:64px;padding:8px}
+ .logo{font-size:20px}
+ .topnav{display:none}
+ .topbalance{min-width:150px}
+ .wrap{padding:9px 8px 85px}
+ .heroMain{min-height:245px;padding:19px 14px}
+ .heroMain h1{font-size:31px}
+ .heroMain h2{font-size:23px}
+ .heroArt{font-size:45px}
+ .quick{grid-template-columns:repeat(2,1fr)}
+ .games{grid-template-columns:repeat(2,1fr)}
+ .people,.rewards{grid-template-columns:repeat(2,1fr)}
+ .face{height:115px}
+ .rewards .rewardIcon{height:80px}
+ .bottom{
+  display:grid;
+  position:fixed;
+  left:0;right:0;bottom:0;
+  height:66px;
+  background:#090622;
+  border-top:1px solid #342675;
+  grid-template-columns:repeat(5,1fr);
+  z-index:50
+ }
+ .bottom button{
+  background:none;border:0;color:#fff;
+  font-size:10px
+ }
+ .bottom span{
+  display:block;font-size:22px
+ }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">♛ GameMaster<span class="blue">3D</span></div>
+
+<div class="topbalance">
+<span class="coin">🪙</span>
+<div>
+<small>Balance</small>
+<strong id="balance">50,000</strong>
+</div>
+<button class="plus" onclick="wallet()">+</button>
+</div>
+
+<div class="topnav">
+<button onclick="openRewards()">🎁<br>Rewards</button>
+<button onclick="messages()">💬<br>Messages</button>
+<button onclick="support()">🎧<br>Support</button>
+</div>
+</header>
+
+<main class="wrap">
+
+<!-- DASHBOARD -->
+<section class="hero">
+
+<div class="heroMain">
+<h1>Play & Win</h1>
+<h2>Amazing Rewards</h2>
+<p>Play your favorite games and win exciting virtual rewards.</p>
+
+<button class="btn purple" onclick="login()">Login</button>
+<button class="btn yellow" onclick="register()">Create Account</button>
+
+<div class="heroArt">👩🏻 👩🏽 🎁</div>
+</div>
+
+<div class="daily">
+<h2>🎁 Daily Bonus</h2>
+<p>Claim your daily virtual coin bonus now.</p>
+<button class="btn yellow" onclick="bonus()">Claim Now</button>
+</div>
+
+</section>
+
+<section class="quick">
+<button onclick="openGame(11)"><span class="ico">🎡</span>Spin Wheel</button>
+<button onclick="bonus()"><span class="ico">📅</span>Daily Bonus</button>
+<button onclick="openGame(7)"><span class="ico">🃏</span>Lucky Card</button>
+<button onclick="openGame(34)"><span class="ico">🎨</span>Scratch & Win</button>
+<button onclick="invite()"><span class="ico">👥</span>Invite & Earn</button>
+<button onclick="openRewards()"><span class="ico">👑</span>VIP Club</button>
+</section>
+
+<!-- TOP GIRLS -->
+<section class="section">
+
+<div class="sectionHead">
+<h2>Top Girls</h2>
+<button class="view">View All</button>
+</div>
+
+<div class="people">
+
+<div class="person">
+<div class="face">👩🏻</div>
+<div class="personText">🟢 Ayesha<br>🪙 12,540</div>
+</div>
+
+<div class="person">
+<div class="face">👩🏼</div>
+<div class="personText">🟢 Zoya<br>🪙 9,860</div>
+</div>
+
+<div class="person">
+<div class="face">👩🏻‍🦰</div>
+<div class="personText">🟢 Hania<br>🪙 15,230</div>
+</div>
+
+<div class="person">
+<div class="face">👩🏽</div>
+<div class="personText">🟢 Laiba<br>🪙 8,750</div>
+</div>
+
+<div class="person">
+<div class="face">👩🏼‍🦱</div>
+<div class="personText">🟢 Sana<br>🪙 11,360</div>
+</div>
+
+<div class="person">
+<div class="face">👩🏻‍🦰</div>
+<div class="personText">🟢 Maya<br>🪙 10,480</div>
+</div>
+
+</div>
+</section>
+
+<!-- 50 GAMES -->
+<section class="section" id="gameSection">
+
+<div class="sectionHead">
+<h2>Popular Games <small style="color:#999">50 Games</small></h2>
+<button class="view">View All</button>
+</div>
+
+<div class="games" id="games"></div>
+
+</section>
+
+<!-- REWARDS -->
+<section class="section">
+
+<div class="sectionHead">
+<h2>Rewards</h2>
+<button class="view" onclick="openRewards()">View All</button>
+</div>
+
+<div class="rewards">
+
+<div class="reward">
+<div class="rewardIcon">📱</div>
+<b>iPhone 15</b>
+<p>🪙 1,250,000</p>
+</div>
+
+<div class="reward">
+<div class="rewardIcon">📱</div>
+<b>Samsung S24</b>
+<p>🪙 1,150,000</p>
+</div>
+
+<div class="reward">
+<div class="rewardIcon">💻</div>
+<b>MacBook Air</b>
+<p>🪙 1,800,000</p>
+</div>
+
+<div class="reward">
+<div class="rewardIcon">🎧</div>
+<b>AirPods Pro</b>
+<p>🪙 450,000</p>
+</div>
+
+<div class="reward">
+<div class="rewardIcon">⌚</div>
+<b>Smart Watch</b>
+<p>🪙 350,000</p>
+</div>
+
+<div class="reward">
+<div class="rewardIcon">🪙</div>
+<b>Gold Coin</b>
+<p>🪙 120,000</p>
+</div>
+
+</div>
+</section>
+
+</main>
+
+<!-- MOBILE NAV -->
+<div class="bottom">
+<button onclick="topPage()"><span>⌂</span>Home</button>
+<button onclick="gamesPage()"><span>🎮</span>Games</button>
+<button onclick="openRewards()"><span>🎁</span>Rewards</button>
+<button onclick="wallet()"><span>💳</span>Wallet</button>
+<button onclick="login()"><span>👤</span>Profile</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modalBox" id="modalBox"></div>
+</div>
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+const gameData=[
+["Aviator","✈️"],
+["Dragon Tiger","🐉"],
+["Roulette","🎡"],
+["Andar Bahar","🃏"],
+["Mines","💣"],
+["Jackpot Slots","🎰"],
+["Crash","🚀"],
+["Teen Patti","🃏"],
+["Ludo","🎲"],
+["Dice","🎲"],
+["Plinko","🔴"],
+["Lucky Wheel","🎡"],
+["Blackjack","🂡"],
+["Baccarat","🃏"],
+["Keno","🔢"],
+["Color Wheel","🌈"],
+["Fruit Slots","🍒"],
+["Golden 7","7️⃣"],
+["Diamond Slots","💎"],
+["Fancy 777","🎰"],
+["Poker","♠️"],
+["Speed Cards","🃏"],
+["High Low","⬆️"],
+["Coin Flip","🪙"],
+["Lucky Dice","🎲"],
+["Magic Ball","🔮"],
+["Number Rush","🔢"],
+["Treasure Hunt","💰"],
+["Rocket Run","🚀"],
+["Star Spin","⭐"],
+["Candy Blast","🍬"],
+["Bubble Pop","🫧"],
+["Memory Match","🧠"],
+["Scratch Win","🎨"],
+["Lucky Box","🎁"],
+["Gold Miner","⛏️"],
+["Gem Hunt","💎"],
+["Treasure Chest","🧰"],
+["Fire Wheel","🔥"],
+["Ocean Spin","🌊"],
+["Dragon Spin","🐲"],
+["Royal Cards","👑"],
+["Magic Slots","✨"],
+["Space Dice","🌌"],
+["Jungle Win","🌴"],
+["Candy Wheel","🍭"],
+["Football Kick","⚽"],
+["Basketball Shot","🏀"],
+["Car Race","🏎️"],
+["Target Hit","🎯"]
+];
+
+const games=document.getElementById("games");
+
+gameData.forEach((g,i)=>{
+
+let tag=i<6?"HOT":i%5===0?"NEW":"PLAY";
+
+games.innerHTML+=`
+<button class="gameCard" onclick="openGame(${i})">
+<div class="gameIcon">${g[1]}</div>
+<div class="gameName">${g[0]}</div>
+<div class="gameTag">${tag}</div>
+</button>
+`;
+
+});
+
+/* =========================
+   ACCOUNT / BALANCE
+========================= */
+
+let balance=Number(localStorage.getItem("gm_balance")||50000);
+
+let account=JSON.parse(
+localStorage.getItem("gm_account")||"null"
+);
+
+function saveBalance(){
+localStorage.setItem("gm_balance",balance);
+document.getElementById("balance").textContent=
+balance.toLocaleString();
+}
+
+saveBalance();
+
+/* =========================
+   MODAL
+========================= */
+
+const modal=document.getElementById("modal");
+const modalBox=document.getElementById("modalBox");
+
+function show(html){
+modalBox.innerHTML=html;
+modal.classList.add("open");
+}
+
+function closeModal(){
+modal.classList.remove("open");
+}
+
+modal.onclick=function(e){
+if(e.target===modal)closeModal();
+};
+
+/* =========================
+   REGISTER
+========================= */
+
+function register(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>✨ Create Account</h2>
+
+<input id="regName"
+class="input"
+placeholder="Full Name">
+
+<input id="regUser"
+class="input"
+placeholder="User ID">
+
+<input id="regPass"
+class="input"
+type="password"
+placeholder="Password">
+
+<button class="btn yellow"
+style="width:100%"
+onclick="createAccount()">
+Create Account
+</button>
+`);
+}
+
+function createAccount(){
+
+let name=document.getElementById("regName").value.trim();
+let user=document.getElementById("regUser").value.trim();
+let pass=document.getElementById("regPass").value;
+
+if(!name||!user||!pass){
+alert("Please fill all fields.");
+return;
+}
+
+account={
+name:name,
+user:user,
+pass:pass
+};
+
+localStorage.setItem(
+"gm_account",
+JSON.stringify(account)
+);
+
+alert("Account created successfully!");
+
+closeModal();
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+function login(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>🔐 Login</h2>
+
+<input id="loginUser"
+class="input"
+placeholder="User ID">
+
+<input id="loginPass"
+class="input"
+type="password"
+placeholder="Password">
+
+<button class="btn purple"
+style="width:100%"
+onclick="doLogin()">
+Login
+</button>
+
+<p style="color:#999">
+Demo account is saved only in this browser.
+</p>
+`);
+}
+
+function doLogin(){
+
+if(!account){
+alert("Please create an account first.");
+return;
+}
+
+let u=document.getElementById("loginUser").value;
+let p=document.getElementById("loginPass").value;
+
+if(u===account.user && p===account.pass){
+
+alert("Welcome "+account.name+"!");
+
+closeModal();
+
+}else{
+
+alert("Wrong User ID or Password.");
+
+}
+}
+
+/* =========================
+   DAILY BONUS
+========================= */
+
+function bonus(){
+
+let today=new Date().toDateString();
+
+if(localStorage.getItem("gm_bonus")===today){
+
+alert("Today's bonus has already been claimed.");
+
+return;
+}
+
+balance+=5000;
+
+localStorage.setItem("gm_bonus",today);
+
+saveBalance();
+
+alert("🎉 5,000 virtual coins added!");
+}
+
+/* =========================
+   WALLET
+========================= */
+
+function wallet(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>💳 Virtual Wallet</h2>
+
+<h3>
+Current Balance:
+🪙 ${balance.toLocaleString()}
+</h3>
+
+<hr>
+
+<button class="btn purple"
+onclick="addCoins()">
++10,000 Virtual Coins
+</button>
+
+<button class="btn yellow"
+onclick="takeCoins()">
+−5,000 Virtual Coins
+</button>
+
+<p style="color:#999;font-size:13px">
+This wallet uses virtual game coins only.
+No real-money payment processing is connected.
+</p>
+`);
+}
+
+function addCoins(){
+
+balance+=10000;
+
+saveBalance();
+
+closeModal();
+
+}
+
+function takeCoins(){
+
+if(balance<5000){
+
+alert("Not enough virtual coins.");
+
+return;
+}
+
+balance-=5000;
+
+saveBalance();
+
+closeModal();
+
+}
+
+/* =========================
+   REWARDS
+========================= */
+
+function openRewards(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>👑 Rewards Plans</h2>
+
+<div class="section">
+<h3>🥉 Bronze</h3>
+<p>5,000 virtual coins</p>
+</div>
+
+<div class="section">
+<h3>🥈 Silver</h3>
+<p>25,000 virtual coins</p>
+</div>
+
+<div class="section">
+<h3>🥇 Gold</h3>
+<p>75,000 virtual coins</p>
+</div>
+
+<div class="section">
+<h3>💎 Platinum</h3>
+<p>100,000 virtual coins</p>
+</div>
+
+<div class="section">
+<h3>👑 VIP</h3>
+<p>150,000 virtual coins</p>
+</div>
+`);
+}
+
+/* =========================
+   INVITE
+========================= */
+
+function invite(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>🎁 Invite & Earn</h2>
+
+<p>Your referral code:</p>
+
+<div style="
+background:#ffd21b;
+color:#111;
+padding:14px;
+border-radius:9px;
+font-weight:bold;
+text-align:center">
+GM${Math.floor(100000+Math.random()*900000)}
+</div>
+
+<p>Invite friends and earn virtual coins.</p>
+`);
+}
+
+/* =========================
+   SUPPORT
+========================= */
+
+function support(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>🎧 Customer Support</h2>
+
+<p>Welcome to GameMaster 3D support.</p>
+
+<p>For help with your account or games,
+contact the site administrator.</p>
+`);
+}
+
+function messages(){
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<h2>💬 Messages</h2>
+
+<p>🎉 Welcome to GameMaster 3D.</p>
+
+<p>🎁 Your daily bonus may be available.</p>
+`);
+}
+
+/* =========================
+   GAME OPEN
+========================= */
+
+function openGame(index){
+
+let g=gameData[index];
+
+if(index===0){
+
+openAviator();
+
+return;
+
+}
+
+show(`
+<button class="close" onclick="closeModal()">×</button>
+
+<div class="stage">
+
+<div class="stageIcon">${g[1]}</div>
+
+<div class="stageTitle">${g[0]}</div>
+
+<div id="gameResult" class="result">
+Ready to play
+</div>
+
+<button
+class="btn purple"
+style="font-size:18px"
+onclick="playSimple(${index})">
+▶ PLAY
+</button>
+
+<p style="color:#999">
+Virtual coins only.
+</p>
+
+</div>
+`);
+}
+
+/* =========================
+   SIMPLE GAMES
+========================= */
+
+function playSimple(index){
+
+let result=document.getElementById("gameResult");
+
+if(balance<100){
+
+result.textContent="Need at least 100 virtual coins.";
+
+return;
+}
+
+balance-=100;
+
+let win=Math.random()<0.48;
+
+if(win){
+
+let prize=200+Math.floor(Math.random()*801);
+
+balance+=prize;
+
+result.textContent=
+"🎉 WIN +"+prize.toLocaleString()+" coins";
+
+}else{
+
+result.textContent=
+"❌ Round lost — 100 coins used.";
+
+}
+
+saveBalance();
+
+}
+
+/* =========================
+   AVIATOR GAME
+========================= */
+
+let aviatorTimer=null;
+let aviatorRunning=false;
+let aviatorMultiplier=1;
+let aviatorCrash=1;
+let aviatorBet=100;
+let aviatorCashed=false;
+
+function openAviator(){
+
+show(`
+<button class="close" onclick="stopAviator()">×</button>
+
+<div class="aviator">
+
+<div class="aviTop">
+<div class="aviLogo">Aviator</div>
+<div>🪙 <span id="aviBalance">
+${balance.toLocaleString()}
+</span></div>
+</div>
+
+<div class="multHistory">
+<span>1.22x</span>
+<span>1.68x</span>
+<span>2.45x</span>
+<span>1.17x</span>
+<span>3.20x</span>
+<span>1.05x</span>
+</div>
+
+<div class="flyArea">
+
+<div id="aviMultiplier"
+class="multiplier">
+1.00x
+</div>
+
+<div id="plane"
+class="plane">
+✈️
+</div>
+
+</div>
+
+<div class="betPanel">
+
+<div class="betRow">
+
+<button class="amountBtn"
+onclick="changeBet(-50)">
+−
+</button>
+
+<div id="aviBet"
+class="betAmount">
+${aviatorBet}
+</div>
+
+<button class="amountBtn"
+onclick="changeBet(50)">
++
+</button>
+
+</div>
+
+<button
+id="aviPlay"
+class="betButton"
+onclick="startAviator()">
+BET ${aviatorBet} COINS
+</button>
+
+</div>
+
+<div class="history">
+<span>1.08x</span>
+<span>1.42x</span>
+<span>2.11x</span>
+<span>5.20x</span>
+<span>1.16x</span>
+</div>
+
+<p style="color:#999;text-align:center">
+Virtual coin game — no real-money betting.
+</p>
+
+</div>
+`);
+
+}
+
+function changeBet(amount){
+
+if(aviatorRunning)return;
+
+aviatorBet+=amount;
+
+if(aviatorBet<50)
+aviatorBet=50;
+
+if(aviatorBet>5000)
+aviatorBet=5000;
+
+let el=document.getElementById("aviBet");
+
+if(el)el.textContent=aviatorBet;
+
+let btn=document.getElementById("aviPlay");
+
+if(btn)
+btn.textContent="BET "+aviatorBet+" COINS";
+}
+
+function startAviator(){
+
+if(aviatorRunning)return;
+
+if(balance<aviatorBet){
+
+alert("Not enough virtual coins.");
+
+return;
+}
+
+balance-=aviatorBet;
+
+saveBalance();
+
+aviatorMultiplier=1;
+
+aviatorCrash=
+1.10+
+Math.random()*7;
+
+aviatorRunning=true;
+aviatorCashed=false;
+
+let button=document.getElementById("aviPlay");
+
+button.classList.add("cashButton");
+button.textContent=
+"CASH OUT 1.00x";
+
+aviatorTimer=setInterval(()=>{
+
+aviatorMultiplier+=
+0.01+
+aviatorMultiplier*0.006;
+
+let mult=document.getElementById("aviMultiplier");
+
+let plane=document.getElementById("plane");
+
+if(mult)
+mult.textContent=
+aviatorMultiplier.toFixed(2)+"x";
+
+if(plane){
+
+let x=Math.min(
+70,
+10+aviatorMultiplier*8
+);
+
+plane.style.left=x+"%";
+
+}
+
+if(button){
+
+button.textContent=
+"CASH OUT "+
+aviatorMultiplier.toFixed(2)+"x";
+
+}
+
+if(aviatorMultiplier>=aviatorCrash){
+
+endAviator();
+
+}
+
+},100);
+
+}
+
+function cashOut(){
+
+if(!aviatorRunning)return;
+
+aviatorCashed=true;
+
+let win=
+Math.floor(
+aviatorBet*aviatorMultiplier
+);
+
+balance+=win;
+
+saveBalance();
+
+clearInterval(aviatorTimer);
+
+aviatorRunning=false;
+
+let mult=document.getElementById("aviMultiplier");
+
+if(mult)
+mult.textContent=
+"🎉 "+aviatorMultiplier.toFixed(2)+"x";
+
+let button=document.getElementById("aviPlay");
+
+if(button){
+
+button.classList.remove("cashButton");
+
+button.textContent=
+"PLAY AGAIN";
+
+button.onclick=function(){
+startAviator();
+};
+
+}
+
+}
+
+function endAviator(){
+
+clearInterval(aviatorTimer);
+
+aviatorRunning=false;
+
+let mult=document.getElementById("aviMultiplier");
+
+if(mult)
+mult.textContent=
+"💥 "+aviatorCrash.toFixed(2)+"x";
+
+let button=document.getElementById("aviPlay");
+
+if(button){
+
+button.classList.remove("cashButton");
+
+button.textContent=
+"PLAY AGAIN";
+
+button.onclick=function(){
+startAviator();
+};
+
+}
+
+}
+
+function stopAviator(){
+
+if(aviatorTimer)
+clearInterval(aviatorTimer);
+
+aviatorRunning=false;
+
+closeModal();
+
+}
+
+/* Change button action while game running */
+document.addEventListener("click",function(e){
+
+if(
+e.target &&
+e.target.id==="aviPlay" &&
+aviatorRunning
+){
+
+cashOut();
+
+}
+
+});
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function topPage(){
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+function gamesPage(){
+
+document
+.getElementById("gameSection")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+</script>
+
+</body>
+</html>
